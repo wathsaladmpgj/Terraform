@@ -2,22 +2,22 @@ pipeline {
   agent any
 
   stages {
-    stage('Check Repo') {
-      steps {
-        sh 'echo Jenkinsfile found!'
-        sh 'ls -la'
-      }
+    stage('Checkout') {
+      steps { checkout scm }
     }
 
     stage('Terraform Init') {
-      steps {
-        sh 'terraform init'
-      }
+      steps { sh 'terraform init' }
     }
 
     stage('Terraform Plan') {
+      steps { sh 'terraform plan' }
+    }
+
+    stage('Terraform Apply') {
       steps {
-        sh 'terraform plan'
+        input message: 'Apply Terraform changes?'
+        sh 'terraform apply -auto-approve'
       }
     }
   }
